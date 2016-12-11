@@ -6,12 +6,12 @@ def load_image(image_name, fade_enabled=False):
         # depending on the player's resolution settings
         if not fade_enabled:
             return pygame.image.load("".join((
-                file_directory, "Image Files\\",
+                file_directory, "assets\\images\\",
                 image_name, ".png"
                 ))).convert_alpha()   # Fixes per pixel alphas permanently
         else:
             return pygame.image.load("".join((
-                file_directory, "Image Files\\",
+                file_directory, "assets\\images\\",
                 image_name, ".png"
                 ))).convert()
     except Exception as error:
