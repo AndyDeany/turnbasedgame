@@ -17,3 +17,13 @@ def load_image(image_name, fade_enabled=False):
                 ))).convert()
     except Exception as error:
         log("".join(("Failed to load image: ", image_name, ".png")))
+
+def load_font(font_name, font_size):
+    global error
+    try:
+        return pygame.font.Font("".join((
+            file_directory, "assets\\fonts\\",
+            font_name, ".ttf"
+            )), font_size)
+    except Exception as error:
+        log("".join(("Failed to load font: ", font_name, ".ttf")))
