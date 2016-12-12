@@ -60,6 +60,11 @@ for python_file in os.listdir("func"):
 ### ---------- FUNCTION DEFINITIONS - END ---------- ###
 
 ### ---------- CLASS DEFINITIONS - START ---------- ###
+try:    # Loading simple abstract classes that other classes need to inherit from
+    execfile("helper\\abstract_classes.py")
+except Exception as error:
+    log("Failed to load abstract classes")
+
 for python_file in os.listdir("lib"):
     try:
         execfile("".join(("lib\\", python_file)))
