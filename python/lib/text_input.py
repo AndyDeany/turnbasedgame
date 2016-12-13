@@ -25,8 +25,9 @@ class TextInput(object):
     @classmethod
     def receive_single_characters(self):
         if self.accepting_text:
-            if event.key == 8 and self.text != "":
-                self.text = self.text[:-1]
+            if event.key == 8:
+                if self.text != "":
+                    self.text = self.text[:-1]
             elif event.key == 9:
                 #! This (above) is the TAB key. Perhaps it should
                 # make the cursor go to the next box and this
