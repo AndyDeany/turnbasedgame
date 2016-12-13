@@ -1,9 +1,9 @@
 def mousein(x, y, width, height):
-    """Takes in coordinates for a 1920x1080 screen"""
+    """Determines if the mouse is in the given rectangle"""
     global error
     try:
-        if (mouse_x > x*(screen_width/1920.0) and mouse_x < (x + width)*(screen_width/1920.0)
-            and mouse_y > y*(screen_height/1080.0) and mouse_y < (y + height)*(screen_height/1080.0)):
+        if (mouse_x > x and mouse_x < (x + width) and
+                mouse_y > y and mouse_y < (y + height)):
             return True
         else:
             return False
