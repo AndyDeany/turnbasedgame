@@ -9,4 +9,4 @@ with description("Item"):
             )
         expect(heart.name).to(equal("Heart"))
         expect(heart.description).to(equal("A lovely heart."))
-        expect(heart.image_name).to(equal("heart"))
+        expect(heart.image_name).to(equal("items/heart"))

@@ -1,6 +1,6 @@
 class Item(OneImage):
     def __init__(self, name, description, image_name):   #! Add quantity?
-        super(Item, self).__init__(image_name)
+        super(Item, self).__init__("".join(("items/", image_name)))
         self.name = name
         self.description = description
 
