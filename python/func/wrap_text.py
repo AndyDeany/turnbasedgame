@@ -19,7 +19,7 @@ def wrap_text(text, font, max_width):
                     line = " ".join((line, words.pop(0)))
                     if not words:
                         break
-                    width = font.size(" ".join((line, words[0])))
+                    width = font.size(" ".join((line, words[0])))[0]
 
             if font.size(line)[0] > max_width:
                 raise ValueError("".join(("\"", line, "\"", " is too long to be wrapped.")))
