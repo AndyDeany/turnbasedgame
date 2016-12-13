@@ -2,7 +2,9 @@ class Item(OneImage):
     def __init__(self, name, description, image_name):   #! Add quantity?
         super(Item, self).__init__("".join(("items/", image_name)))
         self.name = name
-        self.description = description
+        self.description = wrap_text(description,
+                                     self.description_font,
+                                     self.info_text_width)
 
     def display(self, coordinates):
         self.load_image()
@@ -18,15 +20,12 @@ class Item(OneImage):
     info_text_colour = (0, 0, 0)
 
     def display_info(self, coordinates):
-        description_lines = wrap_text(self.description,
-                                      self.description_font,
-                                      self.info_text_width)
-
-        description_line_height = self.description_font.size(description_lines[-1])[1]
+        """Displays the items name and description at the given coordinates"""
         info_width = 2*self.info_text_padding + self.info_text_width
         name_height = 2*self.info_text_padding + self.name_font.size(self.name)[1]
+        description_line_height = self.description_font.size(self.description[-1])[1]
         description_height = (2*self.info_text_padding
-                              + len(description_lines) * description_line_height)
+                              + len(self.description) * description_line_height)
 
         name_rect = pygame.Rect(coordinates, (info_width, name_height))
         description_rect = pygame.Rect((coordinates[0], coordinates[1] + name_height),
@@ -41,8 +40,8 @@ class Item(OneImage):
                     (coordinates[0] + self.info_text_padding,
                      coordinates[1] + self.info_text_padding))
 
-        for index in range(len(description_lines)):
-            screen.blit(self.description_font.render(description_lines[index],
+        for index in range(len(self.description)):
+            screen.blit(self.description_font.render(self.description[index],
                                                      True,
                                                      self.info_text_colour),
                         (coordinates[0] + self.info_text_padding,
