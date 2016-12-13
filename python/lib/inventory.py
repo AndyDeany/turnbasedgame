@@ -37,8 +37,9 @@ class Inventory(object):
     bottom_row_small_image = load_image("inventory_bottom_small")
     empty_slot_image = load_image("empty_inventory_slot")
 
-    show_info_in_corner = False     #! Change this to load from the player's settings file
-    screen_side_info_padding = 30
+    screen_side_info_padding = 30   # Pixels between edge of screen and info
+                                    # box if player has info boxes configured
+                                    # to show at the edge of the screen
 
     def display(self, coordinates):
         screen.blit(self.top_row_image, coordinates)
@@ -79,7 +80,7 @@ class Inventory(object):
                 # on top of all of the items (so it needs to be blitted afterwards).
                 if mousein(x, y, self.item_image_side_length, self.item_image_side_length):
                     item_to_show_info_of = self.items[index]
-                    if self.show_info_in_corner:
+                    if Options.show_item_info_at_side:
                         item_info_coordinates = (
                             screen_width - Item.info_text_width - self.screen_side_info_padding,
                             screen_height/3
