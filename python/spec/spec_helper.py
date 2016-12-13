@@ -9,7 +9,7 @@ pygame.init()
 
 file_directory = "".join((os.path.dirname(os.getcwd()), "\\"))
 
-execfile("helper/error_logging.py")
+execfile("spec/support/error_logging.py")   # Altered log function
 execfile("helper/asset_loading.py")
 execfile("helper/initialise_screen.py")
 
