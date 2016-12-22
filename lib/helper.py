@@ -13,15 +13,6 @@ class Helper(object):
             self.game.log("Failed to load ", calling_class.__name__, " class assets")
         setattr(calling_class, "class_assets_loaded", True)
 
-    def mousein(self, x, y, width, height):
-        """Determines if the mouse is in the given rectangle."""
-        try:
-            return (x < self.game.mouse[0] < x + width and
-                    y < self.game.mouse[1] < y + height)
-        except Exception as self.game.error:
-            self.game.log("Unable to determine whether mouse position meet the requirements ",
-                         x, " < x < ", x + width, ", ", y, " < y <  ", y + height)
-
     def wrap_text(self, text, font, max_width):
         """
         Returns an array of lines which can be blitted beneath each other

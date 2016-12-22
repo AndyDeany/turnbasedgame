@@ -194,7 +194,7 @@ class Game(object):
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.MOUSEMOTION:
-                self.mouse = event.pos
+                self.input.mouse_pos = event.pos
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.input.buttondown(event.button)
             elif event.type == pygame.MOUSEBUTTONUP:

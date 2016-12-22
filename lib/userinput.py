@@ -9,6 +9,8 @@ class Input(object):
     def __init__(self, game):
         self.game = game
         try:
+            self.mouse_pos = (0, 0)
+
             self.accepting_text = False     # Showing whether the program is accepting text input
             self.text = ""              # The input text from the user
             self.max_characters = 0     # The maximum amount of allowed characters in an input text
@@ -88,6 +90,15 @@ class Input(object):
             next((button for button in self.buttons.values() if button.number == number)).release()
         except Exception as self.game.error:
             self.game.log("Failed to process a button being released [event number=", number, "]")
+
+    def mousein(self, x, y, width, height):
+        """Determines if the mouse is in the given rectangle."""
+        try:
+            return (x < self.mouse_pos[0] < x + width and
+                    y < self.mouse_pos[1] < y + height)
+        except Exception as self.game.error:
+            self.game.log("Unable to determine whether mouse position meet the requirements ",
+                         x, " < x < ", x + width, ", ", y, " < y <  ", y + height)
 
     def take_text(self, max_characters, output_label=""):
         """

@@ -87,7 +87,7 @@ class Inventory(object):
 
                 # Storing the item to show the info of as info needs to be displayed
                 # on top of all of the items (so it needs to be blitted afterwards).
-                if self.game.helper.mousein(x, y, self.item_image_side_length,
+                if self.game.input.mousein(x, y, self.item_image_side_length,
                                             self.item_image_side_length):
                     item_to_show_info_of = self.items[index]
                     if self.game.options["show item info at side"]:
