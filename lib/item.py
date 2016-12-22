@@ -43,10 +43,10 @@ class Item(OneImage):
             (info_width, description_height)
         )
 
-        self.game.pygame.draw.rect(screen, self.info_background_colour, name_rect)
-        self.game.pygame.draw.rect(screen, self.info_border_colour, name_rect, 1)
-        self.game.pygame.draw.rect(screen, self.info_background_colour, description_rect)
-        self.game.pygame.draw.rect(screen, self.info_border_colour, description_rect, 1)
+        self.game.pygame.draw.rect(self.game.screen, self.info_background_colour, name_rect)
+        self.game.pygame.draw.rect(self.game.screen, self.info_border_colour, name_rect, 1)
+        self.game.pygame.draw.rect(self.game.screen, self.info_background_colour, description_rect)
+        self.game.pygame.draw.rect(self.game.screen, self.info_border_colour, description_rect, 1)
 
         self.game.screen.blit(
             self.name_font.render(self.name, True, self.info_text_colour),
