@@ -23,7 +23,7 @@ from console import Console
 from userinput import Input
 from hotkey import Hotkey
 # Main
-# from [file] import [class]
+from helper import Helper
 
 
 class Game(object):
@@ -54,6 +54,7 @@ class Game(object):
         self.quit_condition = Hotkey(self, "f4", alt=True).pressed
 
         # Main setup
+        self.helper = Helper(self)
         #!!! TEST - REMOVE
         self.input.take_text(100)
         #!!! TEST - REMOVE
