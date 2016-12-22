@@ -3,6 +3,11 @@ class Helper(object):
     def __init__(self, game):
         self.game = game
 
+    def load_class_assets(self, calling_object, assets_dict):
+        for attribute_name in assets_dict:
+            calling_class = calling_object.__class__
+            setattr(calling_class, attribute_name, assets_dict[attribute_name])
+
     def mousein(self, x, y, width, height):
         """Determines if the mouse is in the given rectangle."""
         try:
