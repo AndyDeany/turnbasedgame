@@ -57,6 +57,9 @@ class Game(object):
         self.helper = Helper(self)
 
         self.options = {
+            #! Add a function to make this load the player's settings from a file of
+            # some sort. YAML if you don't care about hiding settings from users.
+            # Inventory
             "show item info at side": False
         }
         #!!! TEST - REMOVE
