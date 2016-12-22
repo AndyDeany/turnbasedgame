@@ -55,6 +55,10 @@ class Game(object):
 
         # Main setup
         self.helper = Helper(self)
+
+        self.options = {
+            "show item info at side": False
+        }
         #!!! TEST - REMOVE
         self.input.take_text(100)
         #!!! TEST - REMOVE
