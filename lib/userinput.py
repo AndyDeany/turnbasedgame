@@ -130,6 +130,17 @@ class Input(object):
             "text": self.text
         })
 
+    def most_recent_output(label=None):
+        """Returns the most recent output (with the given label if label is given)."""
+        if label is None:
+            return self.output[0]
+        else:
+            return next((output for output in self.output if output["label"] == label))
+
+    def all_outputs(label):
+        """Returns a tuple of all outputs with the given label."""
+        return (output for output in self.output if output["label"] == label)
+
     def receive_single_characters(self, event):
         try:
             if (self.accepting_text and
