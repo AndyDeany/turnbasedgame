@@ -164,7 +164,7 @@ class Input(object):
                     # unneeded which isn't that unlikely,
                     # so it may actually be pointless.
                     pass
-                elif event.key == 13:   # Enter key
+                elif event.key in [13, 271]:   # Enter key
                     self.accept_text()
                 elif len(self.text) < self.max_characters:
                     self.text = "".join((self.text, event.unicode))
