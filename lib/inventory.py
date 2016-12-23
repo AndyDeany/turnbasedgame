@@ -91,10 +91,10 @@ class Inventory(object):
                                             self.item_image_side_length):
                     item_to_show_info_of = self.items[index]
                     if self.game.options["show item info at side"]:
-                        item_info_coordinates = (
-                            screen_width - Item.info_text_width - self.screen_side_info_padding,
-                            screen_height/3
-                            )
+                        item_info_coordinates = (self.game.width
+                                                 - Item.info_text_width
+                                                 - self.screen_side_info_padding,
+                                                 self.game.height/3)
                     else:
                         item_info_coordinates = (
                             x + self.item_image_side_length + self.item_padding, y
