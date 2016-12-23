@@ -125,7 +125,7 @@ class Input(object):
 
     def accept_text(self):
         self.accepting_text = False
-        self.output.append({
+        self.output.insert(0, {
             "label": self.output_label,
             "text": self.text
         })
