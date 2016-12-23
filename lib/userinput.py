@@ -56,8 +56,8 @@ class Input(object):
             ("numpad0", 256), ("numpad1", 257), ("numpad2", 258),
             ("numpad3", 259), ("numpad4", 260), ("numpad5", 261),
             ("numpad6", 262), ("numpad7", 263), ("numpad8", 264),
-            ("numpad9", 265), ("numpad/", 266), ("numpad*", 267),
-            ("numpad-", 268), ("numpad+", 269), ("numpadenter", 270),
+            ("numpad9", 265), ("numpad/", 267), ("numpad*", 268),
+            ("numpad-", 269), ("numpad+", 270), ("numpadenter", 271),
 
             # Arrow keys)
             ("up", 273), ("down", 274), ("right", 275), ("left", 276),
