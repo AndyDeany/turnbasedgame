@@ -98,7 +98,7 @@ class Input(object):
                     y < self.mouse_pos[1] < y + height)
         except Exception as self.game.error:
             self.game.log("Unable to determine whether mouse position meet the requirements ",
-                         x, " < x < ", x + width, ", ", y, " < y <  ", y + height)
+                          x, " < x < ", x + width, ", ", y, " < y <  ", y + height)
 
     def take_text(self, max_characters, output_label=""):
         """
