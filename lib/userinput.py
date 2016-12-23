@@ -133,13 +133,16 @@ class Input(object):
     def most_recent_output(self, label=None):
         """Returns the most recent output (with the given label if label is given)."""
         if label is None:
-            return self.output[0]
+            return self.output[0]["text"]
         else:
-            return next((output for output in self.output if output["label"] == label))
+            return next((output["text"] for output in self.output if output["label"] == label))
 
-    def all_outputs(self, label):
-        """Returns a tuple of all outputs with the given label."""
-        return (output for output in self.output if output["label"] == label)
+    def all_outputs(self, label=None):
+        """Returns a tuple of all outputs (with the given label if label is given)."""
+        if label is None:
+            return (output["text"] for output in self.output)
+        else:
+            return (output["text"] for output in self.output if output["label"] == label)
 
     def receive_single_characters(self, event):
         try:
