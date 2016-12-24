@@ -2,6 +2,7 @@ from one_image import OneImage
 
 class Item(OneImage):
     class_assets_loaded = False
+
     def __init__(self, game, name, description, image_name):   #! Add quantity?
         super(Item, self).__init__(game, "".join(("items/", image_name)))
         if not self.class_assets_loaded:

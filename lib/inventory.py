@@ -3,6 +3,7 @@ from item import Item
 class Inventory(object):
     """Class for player's inventories"""
     class_assets_loaded = False
+
     def __init__(self, game, size=25):     #! Maybe have predetermined size
         """Size should be a multiple of 5"""
         self.game = game
@@ -88,7 +89,7 @@ class Inventory(object):
                 # Storing the item to show the info of as info needs to be displayed
                 # on top of all of the items (so it needs to be blitted afterwards).
                 if self.game.input.mousein(x, y, self.item_image_side_length,
-                                            self.item_image_side_length):
+                                           self.item_image_side_length):
                     item_to_show_info_of = self.items[index]
                     if self.game.options["show item info at side"]:
                         item_info_coordinates = (self.game.width
