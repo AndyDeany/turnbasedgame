@@ -1,5 +1,4 @@
 from button import Button
-from hotkey import Hotkey
 
 class Input(object):
     """
@@ -8,26 +7,8 @@ class Input(object):
     """
     def __init__(self, game):
         self.game = game
-        try:
-            self.mouse_pos = (0, 0)
 
-            self.accepting_text = False     # Showing whether the program is accepting text input
-            self.text = ""              # The input text from the user
-            self.max_characters = 0     # The maximum amount of allowed characters in an input text
-            # List of dictionaries {label, text} storing output values from text inputs
-            self.output = []    # See self.accept_text() for more detail
-            self.output_label = ""
-
-            # A list of all the keys that can produce characters when pressed
-            self.character_keys = (
-                [n for n in range(44, 58)] +
-                [n for n in range(96, 123)] +
-                [n for n in range(256, 272)] +
-                [39, 59, 60, 61, 91, 92, 93]
-                )
-        except Exception as self.game.error:
-            self.game.log("Failed to initialise keyboard input object")
-
+        self.mouse_pos = (0, 0)
         self.buttons = {name: Button(self.game, number) for name, number in [
             # Mouse inputs
             ("leftmouse", 1), ("middlemouse", 2), ("rightmouse", 3),
@@ -56,8 +37,9 @@ class Input(object):
             ("numpad0", 256), ("numpad1", 257), ("numpad2", 258),
             ("numpad3", 259), ("numpad4", 260), ("numpad5", 261),
             ("numpad6", 262), ("numpad7", 263), ("numpad8", 264),
-            ("numpad9", 265), ("numpad/", 267), ("numpad*", 268),
-            ("numpad-", 269), ("numpad+", 270), ("numpadenter", 271),
+            ("numpad9", 265), ("numpad.", 266), ("numpad/", 267),
+            ("numpad*", 268), ("numpad-", 269), ("numpad+", 270),
+            ("numpadenter", 271),
 
             # Arrow keys)
             ("up", 273), ("down", 274), ("right", 275), ("left", 276),
@@ -99,107 +81,3 @@ class Input(object):
         except Exception as self.game.error:
             self.game.log("Unable to determine whether mouse position meet the requirements ",
                           x, " < x < ", x + width, ", ", y, " < y <  ", y + height)
-
-    def take_text(self, max_characters, output_label=""):
-        """
-        Enables text input to be taken from the user and
-        labels with the given label
-        """
-        # Maybe turn this into a function which creates a text field
-        # at given coordinates or something
-        self.text = ""
-        self.output_label = output_label
-        self.max_characters = max_characters
-        self.accepting_text = True
-
-    def display_text(self, font, colour, coordinates, antialias=True, background=None):
-        try:
-            if background is None:
-                self.game.screen.blit(font.render(self.text, antialias, colour),
-                                      coordinates)
-            else:
-                self.game.screen.blit(font.render(self.text, antialias, colour, background),
-                                      coordinates)
-        except Exception as self.game.error:
-            self.game.log("Failed to display input text")
-
-    def accept_text(self):
-        self.accepting_text = False
-        self.output.insert(0, {
-            "label": self.output_label,
-            "text": self.text
-        })
-
-    def most_recent_output(self, label=None):
-        """Returns the most recent output (with the given label if label is given)."""
-        if label is None:
-            return self.output[0]["text"]
-        else:
-            return next((output["text"] for output in self.output if output["label"] == label))
-
-    def all_outputs(self, label=None):
-        """Returns a tuple of all outputs (with the given label if label is given)."""
-        if label is None:
-            return (output["text"] for output in self.output)
-        else:
-            return (output["text"] for output in self.output if output["label"] == label)
-
-    def receive_single_characters(self, event):
-        try:
-            if (self.accepting_text and
-                not (self.buttons["leftctrl"].held or
-                     self.buttons["rightctrl"].held or
-                     self.buttons["alt"].held)):
-                if event.key == 8:
-                    if self.text != "":
-                        self.text = self.text[:-1]
-                elif event.key == 9:
-                    #! This (above) is the TAB key. Perhaps it should
-                    # make the cursor go to the next box and this
-                    # would be a good place to do it, since it would
-                    # only be applicable when inputting text. The only
-                    # reason this would be pointless is if
-                    # there are never two text boxes to fill in on
-                    # the same screen, or if this functionality is
-                    # unneeded which isn't that unlikely,
-                    # so it may actually be pointless.
-                    pass
-                elif event.key in [13, 271]:   # Enter key
-                    self.accept_text()
-                elif len(self.text) < self.max_characters:
-                    self.text = "".join((self.text, event.unicode))
-        except Exception as self.game.error:
-            self.game.log("Failed to receive input from key press")
-
-    def receive_multiple_characters(self):
-        def return_key(n):
-            return self.keys[n]
-        try:
-            if (self.accepting_text and
-                self.game.frame % (self.game.fps/30) == 0 and
-                # This (above) means that characters are written/deleted [30] times per second
-                # when their key is held down, which feels natural.
-                not (self.buttons["leftctrl"].held or
-                     self.buttons["rightctrl"].held or
-                     self.buttons["alt"].held)):
-                if self.buttons["backspace"].time_held() > 0.5:
-                    if self.text != "":
-                        self.text = self.text[:-1]
-                elif (len(self.text) < self.max_characters and
-                      # Checking if a key has been held for half a second or longer.
-                      max([self.buttons[key_name].time_held() for key_name in [
-                        " ", "'", ",", "-", ".", "/",
-                        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                        ";", "\\", "=", "[", "#", "]", "`",
-                        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-                        "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-                        "numpad0", "numpad1", "numpad2", "numpad3", "numpad4",
-                        "numpad5", "numpad6", "numpad7", "numpad8", "numpad9",
-                        "numpad/", "numpad*", "numpad-", "numpad+"
-                        ]]) > 0.5):
-                    self.keys = self.game.pygame.key.get_pressed()
-                    # Checking that only one key that provides a character input is pressed.
-                    if sum(map(return_key, self.character_keys)) == 1:
-                        self.text += self.text[-1]
-        except Exception as self.game.error:
-            self.game.log("Failed to receive text input from held keys")

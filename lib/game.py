@@ -22,6 +22,7 @@ from system import System
 from console import Console
 from userinput import Input
 from hotkey import Hotkey
+from text_input import TextInput
 # Main
 from helper import Helper
 
@@ -201,10 +202,10 @@ class Game(object):
                 self.input.buttonup(event.button)
             elif event.type == pygame.KEYDOWN:
                 self.input.buttondown(event.key)
-                self.input.receive_single_characters(event)
+                TextInput.receive_single_characters(event)
             elif event.type == pygame.KEYUP:
                 self.input.buttonup(event.key)
-        self.input.receive_multiple_characters()
+        TextInput.receive_multiple_characters()
 
     def update(self):
         self.frame += 1
