@@ -1,3 +1,5 @@
+from collections import deque
+
 class TextInput(object):
     instances = []
     active = False
@@ -5,10 +7,12 @@ class TextInput(object):
     def __init__(self, game):
         self.game = game
 
+        self.focused = True
         self.accepting_text = False     # Showing whether text is currently being accepted
         self.text = ""              # The input text from the user
         self.max_characters = 0     # The maximum amount of allowed characters in an input text
-        self.inputs = []    # List of inputs. Most recent at index 0
+        self.inputs = deque()   # Double-ended queue (deque) of inputs. Most recent at index 0.
+        # Deques are slower to create than lists, but faster to prepend to.
 
         self.instances.append(self)
 
@@ -24,9 +28,11 @@ class TextInput(object):
         if self.active:
             for instance in self.instances:
                 instance.accepting_text = False
+                instance.focused = False
         else:
             setattr(TextInput, "active", True)
         self.accepting_text = True
+        self.focused = True
 
     def display(self, font, colour, coordinates, antialias=True, background=None):
         try:
@@ -36,14 +42,39 @@ class TextInput(object):
             else:
                 self.game.screen.blit(font.render(self.text, antialias, colour, background),
                                       coordinates)
+
+            # Blinking cursor at end of text when text field is focused
+            if self.focused and self.game.frame % self.game.fps < self.game.fps/2:
+                # Above means 0.5s displaying, 0.5s not displaying
+                self.game.screen.blit(
+                    font.render("|", True, colour),
+                    (coordinates[0] + font.size(self.text)[0]
+                     - font.size(" ")[0]/2, # Fixes cursor showing too far away from text
+                     coordinates[1])
+                )
         except Exception as self.game.error:
             self.game.log("Failed to display text input")
 
-    def disable(self):
+    def disable(self, submit=True):
         """Disables text input from being taken from the user."""
         self.accepting_text = False
-        self.inputs.insert(0, self.text)
+        self.focused = False
+        if submit:
+            self.inputs.appendleft(self.text)
         setattr(TextInput, "active", False)
+
+    def check_focused(self, x, y, width, height):
+        """
+        Checks if the mouse was clicked in the described rectangle,
+        which determines whether the text input text is focused
+        """
+        if self.game.input.buttons["leftmouse"].pressed:
+            if self.game.input.mousein(x, y, width, height):
+                self.focused = True
+                setattr(TextInput, "active", True)
+            else:
+                self.focused = False
+                setattr(TextInput, "active", False)
 
     def most_recent(self):
         """Returns the most recent input."""
@@ -53,7 +84,7 @@ class TextInput(object):
     def active_instance(self):
         """Returns the instance that is currently accepting text."""
         return next((instance for instance in self.instances
-                     if instance.accepting_text), None)
+                     if instance.accepting_text and instance.focused))
 
     @classmethod
     def receive_single_characters(self, event):
