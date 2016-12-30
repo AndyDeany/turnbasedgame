@@ -68,6 +68,22 @@ class DebugConsole(object):
         self.text_input.disable(submit=False)
 
     def logic(self):
+        # Executing commands
+        if self.active and not self.text_input.accepting_text:
+            command = self.text_input.most_recent()
+            try:
+                self.output = self.font.render(str(eval(command)), True,
+                                               self.default_output_colour)
+            except:
+                try:
+                    exec(command)
+                except Exception as error:
+                    self.output = self.font.render(str(error), True,
+                                                   self.error_output_colour)
+
+            self.output_start_frame = self.game.frame
+            self.text_input.enable(self.max_command_length)
+
         # Toggling active state
         if self.toggle_active_hotkey():
             if self.active:
@@ -88,22 +104,6 @@ class DebugConsole(object):
             if not self.text_input.focused:
                 # Hiding the console when it is put out of focus
                 self.deactivate()
-
-        # Executing commands
-        if self.active and not self.text_input.accepting_text:
-            command = self.text_input.most_recent()
-            try:
-                self.output = self.font.render(str(eval(command)), True,
-                                               self.default_output_colour)
-            except:
-                try:
-                    exec(command)
-                except Exception as error:
-                    self.output = self.font.render(str(error), True,
-                                                   self.error_output_colour)
-
-            self.output_start_frame = self.game.frame
-            self.text_input.enable(self.max_command_length)
 
     def draw(self):
         if self.active:
