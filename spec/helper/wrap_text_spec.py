@@ -41,7 +41,7 @@ with description("wrap_text()"):
 
     with it("should create a forced newline wherever \\n is present in the text"):
         font = game.load_font("chewy", 20)
-        text = "Lorem \n ipsum \n dolor \n sit \n amet."
+        text = "Lorem\nipsum\ndolor\nsit\namet."
         lines = game.helper.wrap_text(text, font, 200)
         expect(lines).to(equal(["Lorem", "ipsum", "dolor", "sit", "amet."]))
 
