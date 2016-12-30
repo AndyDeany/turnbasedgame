@@ -18,27 +18,36 @@ class Helper(object):
         Returns an array of lines which can be blitted beneath each other
         in the given font in a box of the given maximum width.
         """
-        try:
+        def wrap_paragraph(paragraph):
+            """Wraps text that doesn't contain newlines."""
+            def too_long(string):
+                return font.size(string)[0] > max_width
+
+            def raise_word_too_long_error(word):
+                raise ValueError("\"%s\" is too long to be wrapped." % word)
+
             lines = []
-            words = text.split(" ")
+            words = paragraph.split()
 
-            while words:
-                line = words.pop(0)
-                if words:
-                    width = font.size(" ".join((line, words[0])))[0]
-                    while width < max_width:
-                        if words[0] == "\n":
-                            del words[0]
-                            break
-                        line = " ".join((line, words.pop(0)))
-                        if not words:
-                            break
-                        width = font.size(" ".join((line, words[0])))[0]
+            line = words.pop(0)
+            if too_long(line):
+                raise_word_too_long_error(line)
 
-                if font.size(line)[0] > max_width:
-                    raise ValueError("".join(("\"", line, "\"", " is too long to be wrapped.")))
-                lines.append(line)
+            for word in words:
+                if too_long(word):
+                    raise_word_too_long_error(word)
 
+                if too_long(" ".join((line, word))):
+                    lines.append(line)
+                    line = word
+                else:
+                    line = " ".join((line, word))
+
+            lines.append(line)
             return lines
+
+        try:
+            paragraphs = text.split("\n")
+            return sum(map(wrap_paragraph, paragraphs), [])
         except Exception as self.game.error:
             self.game.log("Failed to wrap text: \"", text, "\"")
