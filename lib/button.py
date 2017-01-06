@@ -6,6 +6,7 @@ class Button(object):
         self.game = game
         try:
             self.number = number
+            self.event = None   # The last event that caused the button press
 
             self.pressed = 0    # If the button was just pressed
             self.held = 0       # If the button is held

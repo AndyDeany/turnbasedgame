@@ -61,11 +61,18 @@ class Input(object):
         for button in self.buttons.values():
             button.reset()
 
-    def buttondown(self, number):
+    def buttondown(self, event):
         try:
-            next((button for button in self.buttons.values() if button.number == number)).press()
+            if hasattr(event, "key"):
+                number = event.key
+            else:
+                number = event.button
+            button = next((button for button in self.buttons.values() if button.number == number))
+            button.press()
+            button.event = event
         except Exception as self.game.error:
-            self.game.log("Failed to process a button being pressed [event number=", number, "]")
+            self.game.log("Failed to process a button being pressed"
+                          "[event number=", number, "]")
 
     def buttonup(self, number):
         try:

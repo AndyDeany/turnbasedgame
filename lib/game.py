@@ -197,11 +197,11 @@ class Game(object):
             elif event.type == pygame.MOUSEMOTION:
                 self.input.mouse_pos = event.pos
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self.input.buttondown(event.button)
+                self.input.buttondown(event)
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.input.buttonup(event.button)
             elif event.type == pygame.KEYDOWN:
-                self.input.buttondown(event.key)
+                self.input.buttondown(event)
                 TextInput.receive_single_characters(event)
             elif event.type == pygame.KEYUP:
                 self.input.buttonup(event.key)

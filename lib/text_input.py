@@ -1,22 +1,41 @@
 from collections import deque
 
+from hotkey import Hotkey
+
 class TextInput(object):
+    class_assets_loaded = False
     instances = []
     active = False
 
     def __init__(self, game):
         self.game = game
+        if not self.class_assets_loaded:
+            self.load_class_assets()
 
         self.focused = True
         self.accepting_text = False     # Showing whether text is currently being accepted
         self.text = ""              # The input text from the user
         self.max_characters = 0     # The maximum amount of allowed characters in an input text
         self.inputs = deque()   # Double-ended queue (deque) of inputs. Most recent at index 0.
-        # Deques are slower to create than lists, but faster to prepend to.
+        # Deques are slower to create than lists and use more memory, but are faster to prepend to.
+
+        # Blinking cursor positioning
+        self.cursor_position = 0    # 0 means at the start of self.text
+        self.cursor_moved_recently = False
+        self.cursor_last_moved_frame = 0     # The last frame at which the cursor was moved
+        self.move_left_hotkey = Hotkey(self.game, "left")
+        self.move_right_hotkey = Hotkey(self.game, "right")
+        self.home_hotkey = Hotkey(self.game, "home")
+        self.end_hotkey = Hotkey(self.game, "end")
 
         self.instances.append(self)
 
-    def delete(self):
+    def load_class_assets(self):
+        self.game.helper.load_class_assets(self, {
+            "game": self.game
+        })
+
+    def destroy(self):
         self.instances.remove(self)
 
     def enable(self, max_characters):
@@ -34,6 +53,14 @@ class TextInput(object):
         self.accepting_text = True
         self.focused = True
 
+    def disable(self, submit=True):
+        """Disables text input from being taken from the user."""
+        self.accepting_text = False
+        self.focused = False
+        if submit:
+            self.inputs.appendleft(self.text)
+        setattr(TextInput, "active", False)
+
     def display(self, font, colour, coordinates, antialias=True, background=None):
         try:
             if background is None:
@@ -44,24 +71,25 @@ class TextInput(object):
                                       coordinates)
 
             # Blinking cursor at end of text when text field is focused
-            if self.focused and self.game.frame % self.game.fps < self.game.fps/2:
-                # Above means 0.5s displaying, 0.5s not displaying
+            self.update_cursor_moved_recently()
+            if (self.focused and
+                    (self.cursor_moved_recently or
+                     self.game.frame % self.game.fps < self.game.fps/2)):
+                # Above condition means 0.5s displaying, 0.5s not displaying
                 self.game.screen.blit(
                     font.render("|", True, colour),
-                    (coordinates[0] + font.size(self.text)[0]
-                     - font.size(" ")[0]/2, # Fixes cursor showing too far away from text
+                    (coordinates[0]
+                     + font.size(self.text[:self.cursor_position])[0]
+                     - font.size(" ")[0]/2,     # Fixes cursor showing too far away from text
                      coordinates[1])
                 )
         except Exception as self.game.error:
             self.game.log("Failed to display text input")
 
-    def disable(self, submit=True):
-        """Disables text input from being taken from the user."""
-        self.accepting_text = False
-        self.focused = False
-        if submit:
-            self.inputs.appendleft(self.text)
-        setattr(TextInput, "active", False)
+    def update_cursor_moved_recently(self):
+        if (self.cursor_moved_recently and
+                self.game.frame - self.cursor_last_moved_frame > self.game.fps/2):
+            self.cursor_moved_recently = False
 
     def check_focused(self, x, y, width, height):
         """
@@ -80,6 +108,38 @@ class TextInput(object):
         """Returns the most recent input."""
         return self.inputs[0]
 
+    def insert_character(self, character):
+        self.text = (self.text[:self.cursor_position]
+                     + character
+                     + self.text[self.cursor_position:])
+        self.set_cursor_position(self.cursor_position + 1)
+
+    def delete_character(self, positioning):
+        """
+        Deletes a character next to the blinking cursor.
+        `positioning` must be one of "previous" and "following"
+        """
+        if self.text:
+            if positioning == "previous":
+                if self.cursor_position != 0:
+                    self.text = self.text[:self.cursor_position-1] + self.text[self.cursor_position:]
+                    self.set_cursor_position(self.cursor_position - 1)
+            elif positioning == "following":
+                if self.cursor_position != len(self.text):
+                    self.text = self.text[:self.cursor_position] + self.text[self.cursor_position+1:]
+                    self.indicate_cursor_moved_recently()   # Deleting should also force the cursor to display
+            else:
+                raise ValueError("The `positioning` argument of TextInput.delete_character() "
+                                 "must be either \"previous\" or \"following\".")
+
+    def set_cursor_position(self, cursor_position):
+        self.cursor_position = cursor_position
+        self.indicate_cursor_moved_recently()
+
+    def indicate_cursor_moved_recently(self):
+        self.cursor_moved_recently = True
+        self.cursor_last_moved_frame = self.game.frame
+
     @classmethod
     def active_instance(self):
         """Returns the instance that is currently accepting text."""
@@ -94,70 +154,62 @@ class TextInput(object):
                 if not (active_instance.game.input.buttons["leftctrl"].held or
                         active_instance.game.input.buttons["rightctrl"].held or
                         active_instance.game.input.buttons["alt"].held):
-                    if event.key == 8:
-                        if active_instance.text != "":
-                            active_instance.text = active_instance.text[:-1]
-                    elif event.key == 9:
-                        #! This (above) is the TAB key. Perhaps it should
-                        # make the cursor go to the next box and this
-                        # would be a good place to do it, since it would
-                        # only be applicable when inputting text. The only
-                        # reason this would be pointless is if
-                        # there are never two text boxes to fill in on
-                        # the same screen, or if this functionality is
-                        # unneeded which isn't that unlikely,
-                        # so it may actually be pointless.
-                        pass
+                    if event.key == 8:  # Backspace
+                        active_instance.delete_character("previous")
+                    elif event.key == 127:  # Delete
+                        active_instance.delete_character("following")
                     elif event.key in [13, 271]:    # Enter and numpad enter
                         active_instance.disable()
+                    # Moving blinking cursor
+                    elif event.key == 275:  # Right arrow key
+                        if active_instance.cursor_position != len(active_instance.text):
+                            active_instance.set_cursor_position(active_instance.cursor_position + 1)
+                    elif event.key == 276:  # Left arrow key
+                        if active_instance.cursor_position != 0:
+                            active_instance.set_cursor_position(active_instance.cursor_position - 1)
+                    elif event.key == 278:  # Home key
+                        active_instance.set_cursor_position(0)
+                    elif event.key == 279:  # End key
+                        active_instance.set_cursor_position(len(active_instance.text))
+                    # Inserting new characters
                     elif len(active_instance.text) < active_instance.max_characters:
-                        active_instance.text = "".join((active_instance.text, event.unicode))
+                        active_instance.insert_character(event.unicode)
             except Exception as active_instance.game.error:
                 active_instance.game.log("Failed to receive input from a key press"
                                          "[event.key = ", event.key, "]")
 
-    character_keys = (
+    character_keys = (  # Keys that alter the appearance of self.text when it is displayed
         [n for n in range(44, 58)]
         + [n for n in range(96, 123)]
         + [n for n in range(256, 272)]
-        + [39, 59, 60, 61, 91, 92, 93]
+        + [8, 127, 39, 59, 60, 61, 91, 92, 93, 275, 276]
     )
 
     @classmethod
     def receive_multiple_characters(self):
+        if self.active:
+            try:
+                if self.is_a_repeat_frame() and self.character_keys_held() == 1:
+                    button = next((button for button in self.game.input.buttons.values()
+                                   if button.held and button.number in self.character_keys))
+                    if button.time_held() > 0.5:
+                        self.receive_single_characters(button.event)
+            except Exception as self.game.error:
+                self.game.log("Failed to receive text input from held keys")
+
+    @classmethod
+    def character_keys_held(self):
         def return_key(n):
             return self.keys[n]
-        if self.active:
-            active_instance = self.active_instance()
-            try:
-                if (active_instance.game.frame % (active_instance.game.fps/30) == 0 and
-                    # This (above) means that characters are written/deleted [30] times per second
-                    # when their key is held down, which feels natural.
-                    not (active_instance.game.input.buttons["leftctrl"].held or
-                         active_instance.game.input.buttons["rightctrl"].held or
-                         active_instance.game.input.buttons["alt"].held)):
-                    if active_instance.game.input.buttons["backspace"].time_held() > 0.5:
-                        if active_instance.text != "":
-                            active_instance.text = active_instance.text[:-1]
-                    elif (len(active_instance.text) < active_instance.max_characters and
-                          # Checking if a key has been held for half a second or longer.
-                          # max((button.time_held() for button in active_instance.game.input.buttons
-                          #      if button.number in character_keys)) > 0.5):
-                          max((active_instance.game.input.buttons[key_name].time_held()
-                               for key_name in (
-                                " ", "'", ",", "-", ".", "/",
-                                "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                                ";", "\\", "=", "[", "#", "]", "`",
-                                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-                                "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-                                "numpad0", "numpad1", "numpad2", "numpad3", "numpad4",
-                                "numpad5", "numpad6", "numpad7", "numpad8", "numpad9",
-                                "numpad.", "numpad/", "numpad*", "numpad-", "numpad+"
-                            ))) > 0.5):
-                        self.keys = active_instance.game.pygame.key.get_pressed()
-                        # Checking that only one key that provides a character input is pressed.
-                        if (sum(map(return_key, self.character_keys)) == 1 and
-                                active_instance.text != ""):
-                            active_instance.text += active_instance.text[-1]
-            except Exception as active_instance.game.error:
-                active_instance.game.log("Failed to receive text input from held keys")
+        self.keys = self.game.pygame.key.get_pressed()
+        return sum(map(return_key, self.character_keys))
+
+    @classmethod
+    def is_a_repeat_frame(self):
+        """
+        This code means that characters are written/deleted [actions_per_second]
+        times per second when their key is held down. This is also the rate at
+        which the blinking cursor moves when an arrow key is held down.
+        """
+        actions_per_second = 30     # Feels natural
+        return self.game.frame % (self.game.fps/actions_per_second) == 0
