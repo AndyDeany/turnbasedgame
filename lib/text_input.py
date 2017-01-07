@@ -8,9 +8,8 @@ class TextInput(object):
     active = False
 
     def __init__(self, game):
-        self.game = game
         if not self.class_assets_loaded:
-            self.load_class_assets()
+            self.load_class_assets(game)
 
         self.focused = True
         self.accepting_text = False     # Showing whether text is currently being accepted
@@ -30,9 +29,9 @@ class TextInput(object):
 
         self.instances.append(self)
 
-    def load_class_assets(self):
-        self.game.helper.load_class_assets(self, {
-            "game": self.game
+    def load_class_assets(self, game):
+        game.helper.load_class_assets(self, {
+            "game": game
         })
 
     def destroy(self):
@@ -57,6 +56,7 @@ class TextInput(object):
         """Disables text input from being taken from the user."""
         self.accepting_text = False
         self.focused = False
+        self.cursor_position = 0
         if submit:
             self.inputs.appendleft(self.text)
         setattr(TextInput, "active", False)
@@ -85,11 +85,6 @@ class TextInput(object):
                 )
         except Exception as self.game.error:
             self.game.log("Failed to display text input")
-
-    def update_cursor_moved_recently(self):
-        if (self.cursor_moved_recently and
-                self.game.frame - self.cursor_last_moved_frame > self.game.fps/2):
-            self.cursor_moved_recently = False
 
     def check_focused(self, x, y, width, height):
         """
@@ -132,6 +127,17 @@ class TextInput(object):
                 raise ValueError("The `positioning` argument of TextInput.delete_character() "
                                  "must be either \"previous\" or \"following\".")
 
+    def update_with(self, text="", previous_input_index=None):
+        """
+        Updates `self.text` to the given value.
+        Uses a previous input if index is given.
+        """
+        if previous_input_index is None:
+            self.text = text
+        else:
+            self.text = self.inputs[previous_input_index]
+        self.cursor_position = len(self.text)   # Move cursor to end of line
+
     def set_cursor_position(self, cursor_position):
         self.cursor_position = cursor_position
         self.indicate_cursor_moved_recently()
@@ -139,6 +145,11 @@ class TextInput(object):
     def indicate_cursor_moved_recently(self):
         self.cursor_moved_recently = True
         self.cursor_last_moved_frame = self.game.frame
+
+    def update_cursor_moved_recently(self):
+        if (self.cursor_moved_recently and
+                self.game.frame - self.cursor_last_moved_frame > self.game.fps/2):
+            self.cursor_moved_recently = False
 
     @classmethod
     def active_instance(self):
