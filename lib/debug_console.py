@@ -15,7 +15,7 @@ class DebugConsole(object):
                  placeholder_colour=(150, 150, 150),    # grey
                  output_display_time=5,     # seconds
                  default_output_colour=(255, 255, 255),     # white
-                 error_output_colour = (255, 0, 0),  # red
+                 error_output_colour=(255, 0, 0),  # red
                  prompt="> "):
         self.game = game
         try:
@@ -51,6 +51,13 @@ class DebugConsole(object):
             self.input_coordinates = (self.prompt_coordinates[0] + prompt_width,
                                       self.prompt_coordinates[1])
             self.output_coordinates = (0, game.height - 2*text_height)
+
+            # Previous commands
+            self.current_command = ""
+            self.using_previous_commands = False
+            self.command_index = 0
+            self.previous_hotkey = Hotkey(self.game, "up").pressed
+            self.next_hotkey = Hotkey(self.game, "down").pressed
         except Exception as self.game.error:
             self.game.log("Failed to initialise debug console object")
 
@@ -67,7 +74,27 @@ class DebugConsole(object):
         self.saved_input = self.text_input.text
         self.text_input.disable(submit=False)
 
+    def set_command_index(self, command_index):
+        self.command_index = command_index
+        self.text_input.update_with(previous_input_index=command_index)
+
     def logic(self):
+        # Using previously executed commands
+        if self.previous_hotkey():
+            if not self.using_previous_commands and self.text_input.inputs:
+                self.using_previous_commands = True
+                self.current_command = self.text_input.text
+                self.set_command_index(0)
+            elif self.command_index < len(self.text_input.inputs) - 1:
+                self.set_command_index(self.command_index + 1)
+
+        if self.using_previous_commands and self.next_hotkey():
+            if self.command_index == 0:
+                self.using_previous_commands = False
+                self.text_input.update_with(self.current_command)
+            else:
+                self.set_command_index(self.command_index - 1)
+
         # Executing commands
         if self.active and not self.text_input.accepting_text:
             command = self.text_input.most_recent()
@@ -83,6 +110,7 @@ class DebugConsole(object):
 
             self.output_start_frame = self.game.frame
             self.text_input.enable(self.max_command_length)
+            self.using_previous_commands = False
 
         # Toggling active state
         if self.toggle_active_hotkey():
@@ -108,7 +136,7 @@ class DebugConsole(object):
     def draw(self):
         if self.active:
             self.game.screen.blit(self.prompt, self.prompt_coordinates)
-            if self.text_input.text == "":
+            if not self.text_input.text:
                 self.game.screen.blit(self.placeholder_text, self.input_coordinates)
             else:
                 self.text_input.display(self.font, self.input_colour, self.input_coordinates)
