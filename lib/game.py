@@ -56,6 +56,9 @@ class Game(object):
 
         # Main setup
         self.helper = Helper(self)
+        #!!! TEST - REMOVE
+        self.text_input = TextInput(self)
+        #!!! TEST - REMOVE
 
         self.options = {
             #! Add a function to make this load the player's settings from a file of
@@ -64,7 +67,7 @@ class Game(object):
             "show item info at side": False
         }
         #!!! TEST - REMOVE
-        self.input.take_text(100)
+        self.text_input.enable(100)
         #!!! TEST - REMOVE
 
     # Main functions
@@ -76,7 +79,7 @@ class Game(object):
         self.screen.fill((0, 0, 0))
         self.console.draw()
         #!!! TEST - REMOVE
-        self.input.display_text(pygame.font.SysFont("Arial Black", 40, False, False),
+        self.text_input.display(pygame.font.SysFont("Arial Black", 40, False, False),
                                 (255, 255, 255), (0, 0))
         #!!! TEST - REMOVE
 
