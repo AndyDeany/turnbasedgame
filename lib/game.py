@@ -31,7 +31,6 @@ class Game(object):
     def __init__(self, resolution, mode="windowed"):
         # Base setup
         self.directory = os.getcwd()
-        self.error = "Details unknown"  # Default error message
 
         try:
             pygame.init()
@@ -112,7 +111,6 @@ class Game(object):
                     error_message, ": ",
                     str(self.error), " (", self.error.__class__.__name__, ")\n"
                     )))
-            self.error = "Details unknown"  # Resetting to default value
         except:    # Likely only when file_directory has not yet been defined
             error_popup("This error occurred very early during"
                         "game initialisation and could not be logged")
