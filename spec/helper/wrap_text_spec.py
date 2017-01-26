@@ -1,4 +1,4 @@
-execfile("spec/spec_helper.py")
+from spec.spec_helper import *
 
 with description("wrap_text()"):
     with before.all:

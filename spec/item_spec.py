@@ -1,6 +1,5 @@
 from spec.spec_helper import *
 
-from lib.inventory import Inventory
 from lib.item import Item
 
 with description("Item"):
