@@ -112,7 +112,7 @@ class Game(object):
                     str(self.error), " (", self.error.__class__.__name__, ")\n"
                     )))
         except:    # Likely only when file_directory has not yet been defined
-            error_popup("This error occurred very early during"
+            error_popup("This error occurred very early during "
                         "game initialisation and could not be logged")
             raise
         #! Add some code here to show a message in game instead of
