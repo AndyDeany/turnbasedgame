@@ -6,7 +6,7 @@ class Hotkey(object):
             self.ctrl = ctrl
             self.shift = shift
             self.alt = alt
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to initialise hotkey object")
 
     def pressed(self):

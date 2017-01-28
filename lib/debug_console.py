@@ -58,7 +58,7 @@ class DebugConsole(object):
             self.command_index = 0
             self.previous_hotkey = Hotkey(self.game, "up").pressed
             self.next_hotkey = Hotkey(self.game, "down").pressed
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to initialise debug console object")
 
     def activate(self):

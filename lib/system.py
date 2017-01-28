@@ -5,5 +5,5 @@ class System(object):
             display_info = self.game.pygame.display.Info()
             self.MONITOR_WIDTH = display_info.current_w
             self.MONITOR_HEIGHT = display_info.current_h
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to initialise system object")

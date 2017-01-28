@@ -35,7 +35,7 @@ class Game(object):
         try:
             pygame.init()
             self.pygame = pygame
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to initialise pygame")
         self.system = System(self)
         self.width = self.system.MONITOR_WIDTH
@@ -94,24 +94,20 @@ class Game(object):
     def log(self, *error_message):
         """Takes 1 or more strings and concatenates them to create the error message."""
         def error_popup(error_info):
-            ctypes.windll.user32.MessageBoxA(
-                0,
-                "".join(("An error has occurred:\n\n    ",
-                         error_message, ".\n\n\n",
-                         error_info, ".")),
-                "Error",
-                1
-                )
+            text = "".join(("An error has occurred:\n\n    ",
+                            error_message, ".\n\n\n",
+                            error_info, "."))
+            ctypes.windll.user32.MessageBoxA(0, text, "Error", 0)
 
         try:
             error_message = "".join(map(str, error_message))
             with open(self.path_to("log.txt"), "a") as error_log:
                 error_log.write("".join((
                     str(datetime.datetime.utcnow())[0:19], " - ",
-                    error_message, ": ",
-                    str(self.error), " (", self.error.__class__.__name__, ")\n"
+                    error_message, ".\n",
+                    traceback.format_exc(), "\n"
                     )))
-        except:    # Likely only when file_directory has not yet been defined
+        except:    # Likely only when self.file_directory has not yet been defined
             error_popup("This error occurred very early during "
                         "game initialisation and could not be logged")
             raise
@@ -148,7 +144,7 @@ class Game(object):
 
             self.screen = pygame.display.set_mode(resolution, flags)
             self.width, self.height = resolution
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to reinitialise screen in ", mode, " mode "
                      "at ", self.width, "x", self.height, " resolution")
 
@@ -166,7 +162,7 @@ class Game(object):
                 return pygame.image.load(
                     self.path_to("assets/images", image_name + ".png")
                     ).convert()
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to load image: ", image_name, ".png")
 
     def load_font(self, font_name, font_size):
@@ -174,7 +170,7 @@ class Game(object):
             return pygame.font.Font(
                 self.path_to("assets/fonts", font_name + ".ttf"), font_size
                 )
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to load font: ", font_name, ".ttf")
 
     def display(self, image, coordinates, area=None, special_flags=0):
@@ -187,7 +183,7 @@ class Game(object):
                 area = (area[0]*x_scale, area[1]*y_scale,
                         area[2]*x_scale, area[3]*y_scale)
             self.screen.blit(image, coordinates, area, special_flags)
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to display image at ", coordinates)
 
     def inputs(self):
@@ -213,13 +209,13 @@ class Game(object):
         try:
             pygame.display.flip()   # Updating the screen
             self.clock.tick(self.fps)    # [fps] times per second
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to update screen")
 
     def runtime(self):
         try:
             return time.time() - self.start_time
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to calculate and return game run time")
 
     def check_quit(self):
@@ -231,7 +227,7 @@ class Game(object):
         try:
             self.clock = pygame.time.Clock()
             self.start_time = time.time()
-        except Exception as self.error:
+        except Exception:
             self.log("Failed to initialise essential time related display variables")
 
         while self.running:

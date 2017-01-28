@@ -9,7 +9,7 @@ class Helper(object):
             for attribute_name in assets_dict:
                 calling_class = calling_object.__class__
                 setattr(calling_class, attribute_name, assets_dict[attribute_name])
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to load ", calling_class.__name__, " class assets")
         setattr(calling_class, "class_assets_loaded", True)
 
@@ -49,5 +49,5 @@ class Helper(object):
         try:
             paragraphs = text.split("\n")
             return sum(map(wrap_paragraph, paragraphs), [])
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to wrap text: \"", text, "\"")

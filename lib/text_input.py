@@ -83,7 +83,7 @@ class TextInput(object):
                      - font.size(" ")[0]/2,     # Fixes cursor showing too far away from text
                      coordinates[1])
                 )
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to display text input")
 
     def check_focused(self, x, y, width, height):
@@ -185,7 +185,7 @@ class TextInput(object):
                     # Inserting new characters
                     elif len(active_instance.text) < active_instance.max_characters:
                         active_instance.insert_character(event.unicode)
-            except Exception as active_instance.game.error:
+            except Exception:
                 active_instance.game.log("Failed to receive input from a key press"
                                          "[event.key = ", event.key, "]")
 
@@ -205,7 +205,7 @@ class TextInput(object):
                                    if button.held and button.number in self.character_keys))
                     if button.time_held() > 0.5:
                         self.receive_single_characters(button.event)
-            except Exception as self.game.error:
+            except Exception:
                 self.game.log("Failed to receive text input from held keys")
 
     @classmethod

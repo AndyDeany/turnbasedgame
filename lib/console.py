@@ -13,7 +13,7 @@ class Console(object):
             self.hotkeys = {    # (hotkey condition, function)
                 "toggle fps": (Hotkey(self.game, "f", ctrl=True).pressed, self.toggle_fps)
             }
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to initialise console object")
 
     def logic(self):
@@ -34,5 +34,5 @@ class Console(object):
                 "FPS: " + str(int(self.game.clock.get_fps())),
                 True, self.text_colour
                 ), self.fps_coordinates)
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to display FPS")

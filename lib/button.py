@@ -12,7 +12,7 @@ class Button(object):
             self.held = 0       # If the button is held
             self.released = 0   # If the button was just released
             self.press_time = 0.0
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to initialise button variable")
 
     def press(self):
@@ -28,7 +28,7 @@ class Button(object):
         try:
             self.pressed = 0
             self.released = 0
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to reset button")
 
     def time_held(self):
@@ -37,5 +37,5 @@ class Button(object):
                 return time.time() - self.press_time
             else:
                 return 0.0
-        except Exception as self.game.error:
+        except Exception:
             self.game.log("Failed to get button held time")
