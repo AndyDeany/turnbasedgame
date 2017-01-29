@@ -16,8 +16,7 @@ with description("wrap_text()"):
                 "elementum. Etiam ultrices molestie sem vitae accumsan. "
                 "Maecenas dictum gravida nulla non blandit.")
         lines = game.helper.wrap_text(text, font, 200)
-        for index in range(len(lines)):
-            line = lines[index]
+        for index, line in enumerate(lines):
             expect(font.size(line)[0]).to(be_below_or_equal(200))   # Line not too long
             if not index + 1 == len(lines):
                 next_word = lines[index+1].split()[0]

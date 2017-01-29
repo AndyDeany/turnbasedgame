@@ -57,10 +57,9 @@ class Item(OneImage):
         surface.blit(self.name_font.render(self.name, True, self.info_text_colour),
                      (self.info_text_padding, self.info_text_padding))
 
-        for index in range(len(description)):
+        for index, line in enumerate(description):
             surface.blit(
-                self.description_font.render(description[index], True,
-                                             self.info_text_colour),
+                self.description_font.render(line, True, self.info_text_colour),
                 (self.info_text_padding,
                  name_height
                  + self.info_text_padding
