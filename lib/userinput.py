@@ -9,7 +9,8 @@ class Input(object):
         self.game = game
 
         self.mouse_pos = (0, 0)
-        self.buttons = {name: Button(self.game, number) for name, number in [
+        self.buttons = {name: Button(self.game, number) for name, number in (
+            ("default", 0),     # Any keys that only exist on select keyboards (e.g. volume/media buttons)
             # Mouse inputs
             ("leftmouse", 1), ("middlemouse", 2), ("rightmouse", 3),
 
@@ -17,14 +18,14 @@ class Input(object):
             ("pausebreak", 19), ("escape", 27),
             (" ", 32), ("'", 39), (",", 44), ("-", 45), (".", 46), ("/", 47),
 
-            # Numbers across the top)
+            # Numbers across the top
             ("0", 48), ("1", 49), ("2", 50), ("3", 51), ("4", 52),
             ("5", 53), ("6", 54), ("7", 55), ("8", 56), ("9", 57),
 
             (";", 59), ("\\", 60), ("=", 61), ("[", 91),
             ("#", 92), ("]", 93), ("`", 96),
 
-            # Alphabet keys)
+            # Alphabet keys
             ("a", 97), ("b", 98), ("c", 99), ("d", 100), ("e", 101),
             ("f", 102), ("g", 103), ("h", 104), ("i", 105), ("j", 106),
             ("k", 107), ("l", 108), ("m", 109), ("n", 110), ("o", 111),
@@ -33,7 +34,7 @@ class Input(object):
 
             ("delete", 127),
 
-            # Numpad)
+            # Numpad
             ("numpad0", 256), ("numpad1", 257), ("numpad2", 258),
             ("numpad3", 259), ("numpad4", 260), ("numpad5", 261),
             ("numpad6", 262), ("numpad7", 263), ("numpad8", 264),
@@ -41,21 +42,25 @@ class Input(object):
             ("numpad*", 268), ("numpad-", 269), ("numpad+", 270),
             ("numpadenter", 271),
 
-            # Arrow keys)
+            # Arrow keys
             ("up", 273), ("down", 274), ("right", 275), ("left", 276),
 
             ("insert", 277), ("home", 278), ("end", 279),
             ("pageup", 280), ("pagedown", 281),
 
-            # F keys)
+            # F keys
             ("f1", 282), ("f2", 283), ("f3", 284), ("f4", 285),
             ("f5", 286), ("f6", 287), ("f7", 288), ("f8", 289),
             ("f9", 290), ("f10", 291), ("f11", 292), ("f12", 293),
 
-            # Key modifiers)
+            # Key modifiers
+            ("numlock", 300), ("capslock", 301), ("scrolllock", 302),
             ("rightshift", 303), ("leftshift", 304),
-            ("rightctrl", 305), ("leftctrl", 306), ("alt", 308)
-        ]}
+            ("rightctrl", 305), ("leftctrl", 306),
+            ("altgr", 307), ("alt", 308),
+
+            ("leftwindows", 311), ("rightwindows", 312), ("prntscr", 316), ("menu", 319)
+        )}
 
     def reset(self):
         for button in self.buttons.values():
