@@ -2,6 +2,7 @@
 # Base
 import os
 import ctypes
+import traceback
 import datetime
 import time
 # Main
@@ -19,12 +20,13 @@ except ImportError:
 # User defined modules
 # Base
 from system import System
+from helper import Helper
 from console import Console
 from userinput import Input
 from hotkey import Hotkey
 from text_input import TextInput
 # Main
-from helper import Helper
+# from [file] import [class]
 
 
 class Game(object):
@@ -48,13 +50,13 @@ class Game(object):
         self.fps = 60
         self.frame = 0  # The current frame the game is on (since the game was opened)
 
+        self.helper = Helper(self)
         self.console = Console(self)
         self.input = Input(self)
 
         self.quit_condition = Hotkey(self, "f4", alt=True).pressed
 
         # Main setup
-        self.helper = Helper(self)
         #!!! TEST - REMOVE
         self.text_input = TextInput(self)
         #!!! TEST - REMOVE
