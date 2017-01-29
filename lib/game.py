@@ -92,7 +92,7 @@ class Game(object):
         return os.path.join(self.directory, *"/".join(path).split("/"))
 
     def log(self, *error_message):
-        """Takes 1 or more strings and concatenates them to create the error message."""
+        """Takes 1 or more variables and concatenates them to create the error message."""
         def error_popup(error_info):
             text = "".join(("An error has occurred:\n\n    ",
                             error_message, ".\n\n\n",
