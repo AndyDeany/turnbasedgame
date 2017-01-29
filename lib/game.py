@@ -103,8 +103,7 @@ class Game(object):
             error_message = "".join(map(str, error_message))
             with open(self.path_to("log.txt"), "a") as error_log:
                 error_log.write("".join((
-                    str(datetime.datetime.utcnow())[0:19], " - ",
-                    error_message, ".\n",
+                    str(datetime.datetime.utcnow())[0:19], " - ", error_message, ".\n",
                     traceback.format_exc(), "\n"
                     )))
         except:    # Likely only when self.file_directory has not yet been defined
