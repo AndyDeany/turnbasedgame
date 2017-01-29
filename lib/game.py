@@ -122,33 +122,33 @@ class Game(object):
             raise
 
     def initialise_screen(self, resolution=None, mode=None):
-            """(Re)initialises the screen using the given arguments."""
-            try:
-                if resolution is None:
-                    resolution = (self.width, self.height)
-                if mode is None:
-                    mode = self.mode
-                flags = pygame.HWSURFACE | pygame.DOUBLEBUF
-                if mode == "fullscreen":
-                    flags |= pygame.FULLSCREEN
-                elif mode == "windowed":
-                    # Positioning the window in the centre of the screen
-                    os.environ["SDL_VIDEO_WINDOW_POS"] = ",".join((
-                        str((self.system.MONITOR_WIDTH - resolution[0])/2),
-                        str((self.system.MONITOR_HEIGHT - resolution[1])/2)
-                        ))
-                elif mode == "borderless":
-                    os.environ["SDL_VIDEO_WINDOW_POS"] = "0,0"
-                    flags |= pygame.NOFRAME
-                else:
-                    raise ValueError("Unknown mode for reinitialise_screen(): \" %s \"" % mode)
+        """(Re)initialises the screen using the given arguments."""
+        try:
+            if resolution is None:
+                resolution = (self.width, self.height)
+            if mode is None:
+                mode = self.mode
+            flags = pygame.HWSURFACE | pygame.DOUBLEBUF
+            if mode == "fullscreen":
+                flags |= pygame.FULLSCREEN
+            elif mode == "windowed":
+                # Positioning the window in the centre of the screen
+                os.environ["SDL_VIDEO_WINDOW_POS"] = ",".join((
+                    str((self.system.MONITOR_WIDTH - resolution[0])/2),
+                    str((self.system.MONITOR_HEIGHT - resolution[1])/2)
+                    ))
+            elif mode == "borderless":
+                os.environ["SDL_VIDEO_WINDOW_POS"] = "0,0"
+                flags |= pygame.NOFRAME
+            else:
+                raise ValueError("Unknown mode for reinitialise_screen(): \" %s \"" % mode)
 
-                self.screen = pygame.display.set_mode(resolution, flags)
-                self.width, self.height = resolution
-                self.mode = mode
-            except Exception:
-                self.log("Failed to reinitialise screen in ", mode, " mode "
-                         "at ", self.width, "x", self.height, " resolution")
+            self.screen = pygame.display.set_mode(resolution, flags)
+            self.width, self.height = resolution
+            self.mode = mode
+        except Exception:
+            self.log("Failed to reinitialise screen in ", mode, " mode "
+                     "at ", self.width, "x", self.height, " resolution")
 
     # Asset loading
     def load_image(self, image_name, fade_enabled=False):
