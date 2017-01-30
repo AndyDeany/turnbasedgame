@@ -30,13 +30,13 @@ with description("wrap_text()"):
     with it("should raise an error if the first word is too long to wrap"):
         text = "Supercalifragilisticexpialidocious."
 
-        def use_invalid_text():
+        def use_long_first_word():
             game.helper.wrap_text(text, font, 200)
-        expect(use_invalid_text).to(raise_error(ValueError))
+        expect(use_long_first_word).to(raise_error(ValueError))
 
     with it("should raise an error if a word in the middle is too long to wrap"):
         text = "I am feeling supercalifragilisticexpialidocious today!"
 
-        def use_invalid_text():
+        def use_long_middle_word():
             game.helper.wrap_text(text, font, 200)
-        expect(use_invalid_text).to(raise_error(ValueError))
+        expect(use_long_middle_word).to(raise_error(ValueError))
