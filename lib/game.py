@@ -42,7 +42,8 @@ class Game(object):
         self.system = System(self)
         self.width = self.system.MONITOR_WIDTH
         self.height = self.system.MONITOR_HEIGHT
-        self.initialise_screen(resolution, mode)
+        self.mode = mode
+        self.initialise_screen()
         pygame.display.set_caption("insertnamehere (Alpha 1.0)")
         #! pygame.display.set_icon(self.load_image("icon_name.ico"))
 
