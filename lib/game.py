@@ -19,6 +19,7 @@ except ImportError:
 
 # User defined modules
 # Base
+from caught_fatal_exception import CaughtFatalException
 from system import System
 from helper import Helper
 from console import Console
@@ -111,7 +112,7 @@ class Game(object):
         except:    # Likely only when self.file_directory has not yet been defined
             error_popup("This error occurred very early during "
                         "game initialisation and could not be logged")
-            raise
+            raise CaughtFatalException
         #! Add some code here to show a message in game instead of
         # force quitting the game unless the error is sufficiently bad.
         # fatal_error (below) should depend on this code,
@@ -119,7 +120,7 @@ class Game(object):
         fatal_error = True
         if fatal_error:
             error_popup("Please check log.txt for details")
-            raise
+            raise CaughtFatalException
 
     def initialise_screen(self, resolution=None, mode=None):
         """(Re)initialises the screen using the given arguments."""
