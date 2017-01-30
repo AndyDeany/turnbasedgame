@@ -50,9 +50,9 @@ class Game(object):
         self.fps = 60
         self.frame = 0  # The current frame the game is on (since the game was opened)
 
+        self.input = Input(self)
         self.helper = Helper(self)
         self.console = Console(self)
-        self.input = Input(self)
 
         self.quit_condition = Hotkey(self, "f4", alt=True).pressed
 
