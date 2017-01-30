@@ -101,7 +101,7 @@ class DebugConsole(object):
             try:
                 self.output = self.font.render(str(eval(command)), True,
                                                self.default_output_colour)
-            except:
+            except SyntaxError:
                 try:
                     exec(command)
                 except Exception as error:
