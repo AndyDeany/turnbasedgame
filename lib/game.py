@@ -40,8 +40,7 @@ class Game(object):
         except Exception:
             self.log("Failed to initialise pygame")
         self.system = System(self)
-        self.width = self.system.MONITOR_WIDTH
-        self.height = self.system.MONITOR_HEIGHT
+        self.width, self.height = resolution
         self.mode = mode
         self.initialise_screen()
         pygame.display.set_caption("insertnamehere (Alpha 1.0)")
