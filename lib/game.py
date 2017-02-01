@@ -100,7 +100,7 @@ class Game(object):
         error_message = "".join(map(str, error_message))
         try:
             with open(self.path_to("log.txt"), "a") as error_log:
-                error_log.write("%s - %s" % (datetime.datetime.utcnow(), error_message))
+                error_log.write("%s - %s.\n" % (datetime.datetime.utcnow(), error_message))
                 error_log.write(traceback.format_exc() + "\n")
         except:    # Likely only when self.file_directory has not yet been defined
             error_info = "This error occurred very early during game initialisation and could not be logged"
