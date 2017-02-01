@@ -49,5 +49,7 @@ class Helper(object):
         try:
             paragraphs = text.split("\n")
             return sum(map(wrap_paragraph, paragraphs), [])
-        except Exception:
-            self.game.log("Failed to wrap text: \"", text, "\"")
+        except Exception as error:
+            fatal = not type(error) == ValueError
+            self.game.log("Failed to wrap text: \"", text, "\"", fatal=fatal)
+            return ["error"]
