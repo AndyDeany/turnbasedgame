@@ -1,3 +1,6 @@
+import datetime
+import traceback
+
 from lib.game import Game
 from lib.caught_fatal_exception import CaughtFatalException
 
@@ -6,9 +9,14 @@ if __name__ == "__main__":
     # How big should it be? User's monitor dimensions? Something else?
     try:
         game = Game((1280, 720))
-        game.run()
-    except CaughtFatalException:
-        pass
     except Exception:
-        # Catches all exceptions that weren't caught in the rest of the code
-        game.log("UNCAUGHT FATAL EXCEPTION")
+        with open("log.txt", "a") as error_log:
+            error_log.write("%s - UNCAUGHT FATAL EXCEPTION\n" % datetime.datetime.utcnow())
+            error_log.write(traceback.format_exc() + "\n")
+    else:
+        try:
+            game.run()
+        except CaughtFatalException:
+            pass
+        except Exception: # Catches all exceptions that weren't caught in the rest of the code
+            game.log("UNCAUGHT FATAL EXCEPTION")
