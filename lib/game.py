@@ -94,33 +94,27 @@ class Game(object):
         """Returns the complete absolute path of the path given."""
         return os.path.join(self.directory, *"/".join(path).split("/"))
 
-    def log(self, *error_message):
+    def log(self, *error_message, **options):
         """Takes 1 or more variables and concatenates them to create the error message."""
-        def error_popup(error_info):
+        fatal = options.get("fatal", True)  # `fatal` option defaults to True
+        error_message = "".join(map(str, error_message))
+        try:
+            with open(self.path_to("log.txt"), "a") as error_log:
+                error_log.write("%s - %s" % (datetime.datetime.utcnow(), error_message))
+                error_log.write(traceback.format_exc() + "\n")
+        except:    # Likely only when self.file_directory has not yet been defined
+            error_info = "This error occurred very early during game initialisation and could not be logged"
+        else:
+            error_info = "Please check log.txt for details"
+
+        if fatal:
             text = "".join(("An error has occurred:\n\n    ",
                             error_message, ".\n\n\n",
                             error_info, "."))
-            ctypes.windll.user32.MessageBoxA(0, text, "Error", 0)
-
-        try:
-            error_message = "".join(map(str, error_message))
-            with open(self.path_to("log.txt"), "a") as error_log:
-                error_log.write("".join((
-                    str(datetime.datetime.utcnow())[0:19], " - ", error_message, ".\n",
-                    traceback.format_exc(), "\n"
-                    )))
-        except:    # Likely only when self.file_directory has not yet been defined
-            error_popup("This error occurred very early during "
-                        "game initialisation and could not be logged")
-            raise CaughtFatalException
-        #! Add some code here to show a message in game instead of
-        # force quitting the game unless the error is sufficiently bad.
-        # fatal_error (below) should depend on this code,
-        # or it can be passed in to log() as a argument.
-        fatal_error = True
-        if fatal_error:
-            error_popup("Please check log.txt for details")
-            raise CaughtFatalException
+            ctypes.windll.user32.MessageBoxA(0, text, "Error", 0)   # Error popup
+            raise CaughtFatalException(sys.exc_info()[1])
+        else:
+            pass #! Add some code here to show an error message in game
 
     def initialise_screen(self, resolution=None, mode=None):
         """(Re)initialises the screen using the given arguments."""
