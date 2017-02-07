@@ -4,6 +4,10 @@ from lib.inventory import Inventory
 from lib.item import Item
 
 with description("Inventory"):
+    with before.each:
+        global heart
+        heart = Item(game, "Heart", "A lovely heart.", "heart")
+
     with it("should initialise with a default value for size"):
         inventory = Inventory(game)
         expect(inventory.size).to(equal(25))
@@ -16,48 +20,24 @@ with description("Inventory"):
 
     with it("should allow us to add an item"):
         inventory = Inventory(game)
-        heart = Item(
-            game,
-            "Heart",
-            "A lovely heart.",
-            "heart"
-            )
         inventory.add_item(heart)
         expect(inventory.items[0]).to(be(heart))
         expect(inventory.items[1:]).to(equal([None for slot in range(24)]))
 
     with it("should allow us to remove a given item"):
         inventory = Inventory(game)
-        heart = Item(
-            game,
-            "Heart",
-            "A lovely heart.",
-            "heart"
-            )
         inventory.add_item(heart)
         inventory.remove_item(heart)
         expect(inventory.items).to(equal([None for slot in range(25)]))
 
     with it("should allow us to remove an item by index"):
         inventory = Inventory(game)
-        heart = Item(
-            game,
-            "Heart",
-            "A lovely heart.",
-            "heart"
-            )
         inventory.add_item(heart)
         inventory.remove_item(0)
         expect(inventory.items).to(equal([None for slot in range(25)]))
 
     with it("should allow us to swap two items' places"):
         inventory = Inventory(game)
-        heart = Item(
-            game,
-            "Heart",
-            "A lovely heart.",
-            "heart"
-            )
         teddy_bear = Item(
             game,
             "Teddy Bear",
