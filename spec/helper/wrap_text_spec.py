@@ -1,10 +1,8 @@
 from spec.spec_helper import *
 
-with description("wrap_text()"):
-    with before.all:
-        global font
-        font = game.load_font("chewy", 20)
+font = game.load_font("chewy", 20)
 
+with description("wrap_text()"):
     with it("should wrap valid text correctly"):
         text = ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                 "Aliquam faucibus magna arcu, nec finibus lectus gravida "
