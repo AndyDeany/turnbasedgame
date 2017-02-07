@@ -3,11 +3,13 @@ from spec.spec_helper import *
 from lib.inventory import Inventory
 from lib.item import Item
 
-with description("Inventory"):
-    with before.each:
-        global heart
-        heart = Item(game, "Heart", "A lovely heart.", "heart")
+# Test items for adding to inventories
+heart = Item(game, "Heart", "A lovely heart.", "heart")
+teddy_bear = Item(game, "Teddy Bear",
+                  "A cute little teddy bear who loves lollipops... and hugs.",
+                  "teddy_bear")
 
+with description("Inventory"):
     with it("should initialise with a default value for size"):
         inventory = Inventory(game)
         expect(inventory.size).to(equal(25))
@@ -38,13 +40,6 @@ with description("Inventory"):
 
     with it("should allow us to swap two items' places"):
         inventory = Inventory(game)
-        teddy_bear = Item(
-            game,
-            "Teddy Bear",
-            "A cute little teddy bear who loves lollipops... "
-            "and hugs.",
-            "teddy_bear"
-            )
         inventory.add_item(heart)
         inventory.add_item(teddy_bear)
         inventory.swap_items(0, 1)
