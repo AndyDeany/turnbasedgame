@@ -1,4 +1,4 @@
-from item import Item
+from .item import Item
 
 class Inventory(object):
     """Class for player's inventories"""

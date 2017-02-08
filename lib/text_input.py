@@ -1,6 +1,6 @@
 from collections import deque
 
-from hotkey import Hotkey
+from .hotkey import Hotkey
 
 class TextInput(object):
     class_assets_loaded = False
@@ -184,7 +184,7 @@ class TextInput(object):
                         active_instance.set_cursor_position(len(active_instance.text))
                     # Inserting new characters
                     elif len(active_instance.text) < active_instance.max_characters:
-                        active_instance.insert_character(event.unicode)
+                        active_instance.insert_character(event.str)
             except Exception:
                 active_instance.game.log("Failed to receive input from a key press"
                                          "[event.key = ", event.key, "]")
@@ -201,7 +201,7 @@ class TextInput(object):
         if self.active:
             try:
                 if self.is_a_repeat_frame() and self.character_keys_held() == 1:
-                    button = next((button for button in self.game.input.buttons.values()
+                    button = next((button for button in list(self.game.input.buttons.values())
                                    if button.held and button.number in self.character_keys))
                     if button.time_held() > 0.5:
                         self.receive_single_characters(button.event)

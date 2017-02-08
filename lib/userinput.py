@@ -1,4 +1,4 @@
-from button import Button
+from .button import Button
 
 class Input(object):
     """
@@ -63,7 +63,7 @@ class Input(object):
         )}
 
     def reset(self):
-        for button in self.buttons.values():
+        for button in list(self.buttons.values()):
             button.reset()
 
     def buttondown(self, event):
@@ -72,7 +72,7 @@ class Input(object):
                 number = event.key
             else:
                 number = event.button
-            button = next((button for button in self.buttons.values() if button.number == number))
+            button = next((button for button in list(self.buttons.values()) if button.number == number))
             button.press()
             button.event = event
         except Exception:
@@ -81,7 +81,7 @@ class Input(object):
 
     def buttonup(self, number):
         try:
-            next((button for button in self.buttons.values() if button.number == number)).release()
+            next((button for button in list(self.buttons.values()) if button.number == number)).release()
         except Exception:
             self.game.log("Failed to process a button being released [event number=", number, "]")
 

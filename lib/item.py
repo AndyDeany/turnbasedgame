@@ -1,4 +1,4 @@
-from one_image import OneImage
+from .one_image import OneImage
 
 class Item(OneImage):
     class_assets_loaded = False

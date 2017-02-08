@@ -1,4 +1,4 @@
-from hotkey import Hotkey
+from .hotkey import Hotkey
 
 class Console(object):
     def __init__(self, game):
@@ -17,7 +17,7 @@ class Console(object):
             self.game.log("Failed to initialise console object")
 
     def logic(self):
-        for condition, function in self.hotkeys.values():
+        for condition, function in list(self.hotkeys.values()):
             if condition():
                 function()
 

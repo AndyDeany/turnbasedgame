@@ -20,16 +20,16 @@ except ImportError:
 
 # User defined modules
 # Base
-from caught_fatal_exception import CaughtFatalException
-from system import System
-from helper import Helper
-from console import Console
-from userinput import Input
-from hotkey import Hotkey
-from text_input import TextInput
+from .caught_fatal_exception import CaughtFatalException
+from .system import System
+from .helper import Helper
+from .console import Console
+from .userinput import Input
+from .hotkey import Hotkey
+from .text_input import TextInput
 # Main
 #!!! TEST - REMOVE
-from debug_console import DebugConsole
+from .debug_console import DebugConsole
 #!!! TEST - REMOVE
 
 

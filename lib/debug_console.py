@@ -1,5 +1,5 @@
-from text_input import TextInput
-from hotkey import Hotkey
+from .text_input import TextInput
+from .hotkey import Hotkey
 
 class DebugConsole(object):
     """
@@ -115,7 +115,7 @@ class DebugConsole(object):
         # Toggling active state
         if self.toggle_active_hotkey():
             if self.active:
-                if self.text_input.text[-1] == self.toggle_active_hotkey.im_self.button_name:
+                if self.text_input.text[-1] == self.toggle_active_hotkey.__self__.button_name:
                     # Stripping trailing character if there is one
                     # (created by pressing the hotkey to close the console)
                     self.text_input.text = self.text_input.text[:-1]
