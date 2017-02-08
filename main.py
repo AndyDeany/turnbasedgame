@@ -11,7 +11,7 @@ if __name__ == "__main__":
         game = Game((1280, 720))
     except Exception:
         with open("log.txt", "a") as error_log:
-            error_log.write("%s - UNCAUGHT FATAL EXCEPTION\n" % datetime.datetime.utcnow())
+            error_log.write("%s - UNCAUGHT FATAL EXCEPTION (INITIALISATION)\n" % datetime.datetime.utcnow())
             error_log.write(traceback.format_exc() + "\n")
     else:
         try:
