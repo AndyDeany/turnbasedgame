@@ -105,8 +105,8 @@ class DebugConsole(object):
                 try:
                     exec(command)
                 except Exception as error:
-                    self.output = self.font.render(str(error), True,
-                                                   self.error_output_colour)
+                    self.output = self.font.render("%s: %s" % (type(error).__name__, error),
+                                                   True, self.error_output_colour)
 
             self.output_start_frame = self.game.frame
             self.text_input.enable(self.max_command_length)
