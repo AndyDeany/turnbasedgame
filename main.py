@@ -18,5 +18,5 @@ if __name__ == "__main__":
             game.run()
         except CaughtFatalException:
             pass
-        except Exception: # Catches all exceptions that weren't caught in the rest of the code
+        except Exception:   # Catches all exceptions that weren't caught in the rest of the code
             game.log("UNCAUGHT FATAL EXCEPTION")

@@ -115,7 +115,7 @@ class Game(object):
             ctypes.windll.user32.MessageBoxA(0, text, "Error", 0)   # Error popup
             raise CaughtFatalException(sys.exc_info()[1])
         else:
-            pass #! Add some code here to show an error message in game
+            pass    #! Add some code here to show an error message in game
 
     def initialise_screen(self, resolution=None, mode=None):
         """(Re)initialises the screen using the given arguments."""
