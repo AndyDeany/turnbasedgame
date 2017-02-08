@@ -28,7 +28,9 @@ from userinput import Input
 from hotkey import Hotkey
 from text_input import TextInput
 # Main
-# from [file] import [class]
+#!!! TEST - REMOVE
+from debug_console import DebugConsole
+#!!! TEST - REMOVE
 
 
 class Game(object):
@@ -60,7 +62,7 @@ class Game(object):
 
         # Main setup
         #!!! TEST - REMOVE
-        self.text_input = TextInput(self)
+        self.debug_console = DebugConsole(self)
         #!!! TEST - REMOVE
 
         self.options = {
@@ -69,21 +71,20 @@ class Game(object):
             # Inventory
             "show item info at side": False
         }
-        #!!! TEST - REMOVE
-        self.text_input.enable(100)
-        #!!! TEST - REMOVE
 
     # Main functions
     def logic(self):
         self.check_quit()
         self.console.logic()
+        #!!! TEST - REMOVE
+        self.debug_console.logic()
+        #!!! TEST - REMOVE
 
     def draw(self):
         self.screen.fill((0, 0, 0))
         self.console.draw()
         #!!! TEST - REMOVE
-        self.text_input.display(pygame.font.SysFont("Arial Black", 40, False, False),
-                                (255, 255, 255), (0, 0))
+        self.debug_console.draw()
         #!!! TEST - REMOVE
 
     def quit(self):
