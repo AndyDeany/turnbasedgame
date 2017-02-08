@@ -2,6 +2,7 @@ class Hotkey(object):
     def __init__(self, game, button_name, ctrl=False, shift=False, alt=False):
         self.game = game
         try:
+            self.button_name = button_name
             self.button = self.game.input.buttons[button_name]
             self.ctrl = ctrl
             self.shift = shift
@@ -11,15 +12,15 @@ class Hotkey(object):
 
     def pressed(self):
         """Returns True if the hotkey was just pressed."""
-        return self.button.pressed() and self.modifiers_satisfied()
+        return self.button.pressed and self.modifiers_satisfied()
 
     def held(self):
         """Returns True if the hotkey is held."""
-        return self.button.held() and self.modifiers_satisfied()
+        return self.button.held and self.modifiers_satisfied()
 
     def released(self):
         """Returns True if the hotkey was just released."""
-        return self.button.released() and self.modifiers_satisfied()
+        return self.button.released and self.modifiers_satisfied()
 
     def modifiers_satisfied(self):
         return (self.ctrl_satisfied() and
