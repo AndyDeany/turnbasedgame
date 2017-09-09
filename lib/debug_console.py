@@ -1,5 +1,5 @@
-from text_input import TextInput
-from hotkey import Hotkey
+from base.text_input import TextInput
+from base.hotkey import Hotkey
 
 class DebugConsole(object):
     """

@@ -2,7 +2,7 @@ import datetime
 import traceback
 
 from lib.game import Game
-from lib.caught_fatal_exception import CaughtFatalException
+from lib.base.caught_fatal_exception import CaughtFatalException
 
 if __name__ == "__main__":
     #! Decide how the window should be when the game opens. (fullscreen/borderless/windowed)?
