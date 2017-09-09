@@ -1,7 +1,7 @@
 from expects import *
 
 from lib.game import Game
-from lib.caught_fatal_exception import CaughtFatalException
+from lib.base.caught_fatal_exception import CaughtFatalException
 
 import sys
 import datetime
