@@ -35,4 +35,4 @@ class Game(base.Game):
 
     def quit(self):
         #! Add code for autosaving the game here
-        pygame.quit()
+        self.pygame.quit()
